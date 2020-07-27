@@ -1,9 +1,6 @@
-let operators = [];
-var txt = "";
-
 // Function to get transit operators
 function generateSelect(operators) {
-
+  let txt = "";
   txt += '<select id="myselect" onchange="changeOperator(this.value)">';
   txt += '<option value="">Choose...</option>';
   for (obj of operators) {
@@ -20,26 +17,16 @@ async function getOperators() {
   return response.json()
 }
 
-// Call functions to get transit operators
-getOperators()
-.then(data => {
-  console.log(data);
-  operators = data.map(function (element) {return {"Id":element.Id, "Name":element.Name}});
-  console.log(operators, "asddad");
-  return operators;
-})
-.then(operators => generateSelect(operators))
-
 async function getBus(operatorId) {
   const response = await fetch(`http://api.511.org/transit/StopMonitoring?api_key=2e031256-3f0f-48d9-990b-b4df21285a7b&agency=${operatorId}&format=json`)
   return response.json()
 }
 
+// Create a table of buses from the selected operator
 function changeOperator(Id) {
   if (Id == "") {
     document.getElementById("myTable").innerHTML = "";
   }
-
   else {
     getBus(Id)
     .then(data => {
@@ -70,7 +57,7 @@ function changeOperator(Id) {
   }
 }
 
-// google map
+// Initiate Google map
 let map;
 function initMap() {
   map = new google.maps.Map(document.getElementById("googleMap"), {
@@ -80,8 +67,8 @@ function initMap() {
   });
 }
 
+// Create a marker on the map
 let marker = null;
-
 function createMarker(location) {
   
   // Clear the marker of the previously selected bus
@@ -91,10 +78,18 @@ function createMarker(location) {
   }
   
   // Set the marker for the currently selected bus
-  let latLng1 = document.getElementById(location).innerHTML.split(",");
+  let latLngString = document.getElementById(location).innerHTML.split(",");
   
-  let latLng2 = latLng1.map(e => parseFloat(e));
+  let latLngFloat = latLngString.map(e => parseFloat(e));
 
-  marker = new google.maps.Marker({position: {lat: latLng2[1], lng: latLng2[0]}});
+  marker = new google.maps.Marker({position: {lat: latLngFloat[1], lng: latLngFloat[0]}});
   marker.setMap(map);
 }
+
+// Call functions to get transit operators
+getOperators()
+.then(data => {
+  let operators = data.map(function (element) {return {"Id":element.Id, "Name":element.Name}});
+  return operators;
+})
+.then(operators => generateSelect(operators))
