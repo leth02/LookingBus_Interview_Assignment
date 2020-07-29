@@ -31,12 +31,18 @@
           
           <div id="googleMap"></div>
 
+          Notes: The location of the selected bus is updated every 15 seconds. You can stop updating it using the "Stop Update" button on the right.
+        
         </div>
         <div class="col">
           BUS INFORMATION
           <br>
           Choose an operator
           <p id="demo"></p>
+
+          <br>
+          Update selected bus
+        <button id="stopUpdateButton" disabled=true onclick="stopUpdate()" style="background-color: aqua;">Stop Update</button>
 
           
           <p id="myTable"></p>
