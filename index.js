@@ -1,6 +1,7 @@
-// Function to get transit operators
+// Google API key
 const API_KEY= 'ce1be608-3887-45ce-a1dd-ee79e561d8eb';
 
+// Create HTML Select element that allows user to choose an operator.
 function generateSelect(operators) {
   let txt = "";
   txt += '<select id="mySelect" onchange="changeOperator(this.value)">';
@@ -13,17 +14,19 @@ function generateSelect(operators) {
   document.getElementById("demo").innerHTML = txt;
 }
 
+// Fetch the operators
 async function getOperators() {
   const response = await fetch(`http://api.511.org/transit/operators?api_key=${API_KEY}&format=json`)
   return response.json()
 }
 
+// Fetch the list of buses from the selected operator.
 async function getBus(operatorId) {
   const response = await fetch(`http://api.511.org/transit/StopMonitoring?api_key=${API_KEY}&agency=${operatorId}&format=json`)
   return response.json()
 }
 
-// Create a table of buses from the selected operator
+// Create a table of buses from the selected operator.
 function changeOperator(Id) {
   console.log(document.getElementById("mySelect").value);
   console.log(Id);
@@ -36,11 +39,7 @@ function changeOperator(Id) {
     .then(data => {
       if (data["ServiceDelivery"]["StopMonitoringDelivery"]["MonitoredStopVisit"].length != 0) {
         let busInfo = data["ServiceDelivery"]["StopMonitoringDelivery"]["MonitoredStopVisit"];
-        console.log(busInfo);
         let txt = "";
-        /* let busId = busInfo["MonitoredVehicleJourney"]["VehicleRef"];
-        let busLongitude = busInfo[i].MonitoredVehicleJourney.VehicleLocation.Longitude;
-        let busLatitude = busInfo[i].MonitoredVehicleJourney.VehicleLocation.Latitude; */
         
         // create table
         txt += "<table class='table table-hover'>"
@@ -59,7 +58,6 @@ function changeOperator(Id) {
         txt += "</tbody> </table>"
 
         document.getElementById("myTable").innerHTML = txt;
-
       }
       else {
         document.getElementById("myTable").innerHTML = "There are no buses operating at the moment!"
@@ -67,8 +65,6 @@ function changeOperator(Id) {
     })
   }
 }
-
-//, ${data.ServiceDelivery.ProducerRef}, ${busInfo[i].MonitoredVehicleJourney.VehicleRef}
 
 // Initiate Google map
 let map;
@@ -138,7 +134,6 @@ function updateBusLocation() {
 function createMarker(busIndex) {
 
   let busCode = document.getElementById(busIndex + '-button').innerHTML;
-  console.log('bus code is', busCode);
 
   // update the global bus code and global bus index for future update
   globalBusCode = document.getElementById(busIndex + '-button').innerHTML;
@@ -167,7 +162,7 @@ function createMarker(busIndex) {
   marker.setMap(map);
   map.setCenter({lat: latLngFloat[1], lng: latLngFloat[0]})
 
-  // Initiate the polyline
+  // Initiate the polyline and draw it
   busPath = new google.maps.Polyline({
     strokeColor: "#000000",
     strokeOpacity: 1.0,
