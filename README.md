@@ -1,2 +1,2 @@
-# playflu_interview_assignment
-This repository contains the assignment that I did for the interview at Playflu.
+# LookingBus_interview_assignment
+This repository contains the assignment that I did for the interview at LookingBus.
